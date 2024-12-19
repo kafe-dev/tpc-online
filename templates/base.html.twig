@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="{{ app_lang }}">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {% block meta %}
+            <meta name="keywords" content="{{ app_name }}">
+            <meta name="description" content="{{ app_name }}">
+        {% endblock %}
+
+        <title>
+            {% block title %}Welcome!{% endblock %}
+        </title>
+        
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        <div id="tpc-wrapper" data-controller="app">
+            {% block body %}{% endblock %}
+        </div>
+
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
