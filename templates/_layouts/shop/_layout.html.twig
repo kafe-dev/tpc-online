@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="{{ app_lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    {% block meta %}
+        <meta name="keywords" content="{{ app_name }}">
+        <meta name="description" content="{{ app_name }}">
+    {% endblock %}
+    {% block stylesheets %}
+        <link rel="shortcut icon" href="{{ asset('app/img/favicon.ico') }}">
+        <title>{% block title %}{% endblock %}</title>
+    {% endblock %}
+
+</head>
+<body>
+<div id="tpc-wrapper" data-controller="app" class="wrapper">
+
+    {% include '_partials/shop/_newsletter.html.twig' %}
+    {% include '_widgets/shop/_header.html.twig' %}
+
+    {% block body %}{% endblock %}
+
+
+    {% include '_widgets/shop/_footer.html.twig' %}
+    {% include '_partials/shop/_quickview.html.twig' %}
+</div>
+{% block javascripts %}
+    {% block importmap %}{{ importmap('app') }}{% endblock %}
+{% endblock %}
+</body>
+</html>
