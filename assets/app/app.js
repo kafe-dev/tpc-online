@@ -16,8 +16,8 @@ import './css/style.css';
 import './css/responsive.css';
 
 // Import JavaScript
-import './js/vendor/modernizr-3.5.0.min.js';
-import './js/vendor/jquery-3.3.1.min.js';
+import './libs/modernizr-3.5.0.min.js';
+import './libs/jquery-3.3.1.min.js';
 import 'bootstrap';
 import './js/jquery.meanmenu.min.js';
 import './js/jquery.scrollUp.js';
