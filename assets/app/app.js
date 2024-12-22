@@ -24,6 +24,7 @@ import './js/jquery.scrollUp.js';
 import './js/jquery.fancybox.min.js';
 import './js/jquery.countdown.min.js';
 import './js/jquery.nice-select.min.js';
+import './js/jquery-ui.min.js';
 import './js/owl.carousel.min.js';
 import './js/slick.min.js';
 import './js/plugins.js';

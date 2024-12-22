@@ -29,4 +29,30 @@ class HomeController extends AbstractController
 
         return $this->render('home/index.html.twig', ['title' => $title]);
     }
+
+    /**
+     * Action shop.
+     *
+     * This is shop page controller
+     */
+    #[Route('/shop', name: 'shop')]
+    public function shop(): Response
+    {
+        $title = "Shop";
+
+        return $this->render('home/shop.html.twig', ['title' => $title]);
+    }
+
+    /**
+     * Action Product Details.
+     *
+     * This is Product Details page controller
+     */
+    #[Route('/product-details', name: 'product_details')]
+    public function productDetails(): Response
+    {
+        $title = "Product Details";
+
+        return $this->render('home/product_details.html.twig', ['title' => $title]);
+    }
 }
