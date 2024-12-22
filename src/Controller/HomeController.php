@@ -68,4 +68,17 @@ class HomeController extends AbstractController
 
         return $this->render('home/product_compare.html.twig', ['title' => $title]);
     }
+
+    /**
+     * Action Cart.
+     *
+     * This is Cart page controller
+     */
+    #[Route('/cart', name: 'cart')]
+    public function cart(): Response
+    {
+        $title = "Product Compare";
+
+        return $this->render('home/cart.html.twig', ['title' => $title]);
+    }
 }
