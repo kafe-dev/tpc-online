@@ -77,8 +77,34 @@ class HomeController extends AbstractController
     #[Route('/cart', name: 'cart')]
     public function cart(): Response
     {
-        $title = "Product Compare";
+        $title = "Cart";
 
         return $this->render('home/cart.html.twig', ['title' => $title]);
+    }
+
+    /**
+     * Action Checkout.
+     *
+     * This is Checkout page controller
+     */
+    #[Route('/checkout', name: 'checkout')]
+    public function checkout(): Response
+    {
+        $title = "Checkout";
+
+        return $this->render('home/checkout.html.twig', ['title' => $title]);
+    }
+
+    /**
+     * Action Wishlist.
+     *
+     * This is Wishlist page controller
+     */
+    #[Route('/wishlist', name: 'wishlist')]
+    public function wishlist(): Response
+    {
+        $title = "Wishlist";
+
+        return $this->render('home/wishlist.html.twig', ['title' => $title]);
     }
 }
