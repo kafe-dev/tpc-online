@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Class HomeController.
- * 
+ *
  * This is the default controller for this app.
  */
 #[Route(name: 'app_home_')]
@@ -19,7 +19,7 @@ class HomeController extends AbstractController
 
     /**
      * Action index.
-     * 
+     *
      * This is the default action for this controller.
      */
     #[Route('/', name: 'index')]
@@ -29,9 +29,6 @@ class HomeController extends AbstractController
 
         return $this->render('home/index.html.twig', ['title' => $title]);
     }
-
-
-
 
 
 }
