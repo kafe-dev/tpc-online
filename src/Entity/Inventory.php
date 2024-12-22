@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\InventoryRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -43,6 +44,12 @@ class Inventory
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
+
+    public function __construct()
+    {
+        $this->created_at = is_null($this->created_at) ? new DateTime() : $this->created_at;
+        $this->updated_at = new DateTime();
+    }
 
     public function getId(): ?int
     {
