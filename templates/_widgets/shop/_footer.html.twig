@@ -3,7 +3,7 @@
     <div class="container">
         <div class="footer-top">
             <div class="footer-logo text-center">
-                <a href="index.html"><img src="{{ asset('app/img/logo/logo2.png') }}" alt="footer-logo"></a>
+                <a href="{{ path('app_home_index') }}"><img src="{{ asset('app/img/logo/logo2.png') }}" alt="footer-logo"></a>
                 <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature.</p>
             </div>
             <!-- Support Area Start Here -->
@@ -81,13 +81,13 @@
                         <h4 class="footer-title e-header">quick link</h4>
                         <div class="footer-content">
                             <ul class="footer-list quick-link">
-                                <li><a href="cart.html">cart</a></li>
-                                <li><a href="checkout.html">checkout</a></li>
-                                <li><a href="login.html">login</a></li>
-                                <li><a href="register.html">register</a></li>
-                                <li><a href="#">tracking</a></li>
-                                <li><a href="#">product</a></li>
-                                <li><a href="blog.html">blog</a></li>
+                                <li><a href="{{ path('app_home_cart') }}">cart</a></li>
+                                <li><a href="{{ path('app_home_checkout') }}">checkout</a></li>
+                                <li><a href="{{ path('app_home_login') }}">login</a></li>
+                                <li><a href="{{ path('app_home_register') }}">register</a></li>
+                                <li><a href="{{ path('app_home_index') }}">tracking</a></li>
+                                <li><a href="{{ path('app_home_shop') }}">product</a></li>
+                                <li><a href="{{ path('app_home_blog') }}">blog</a></li>
                             </ul>
                         </div>
                     </div>
@@ -127,7 +127,7 @@
                                 </li>
                                 <li class="footer-search mb-30">
                                     <form action="#">
-                                        <input type="text" Placeholder="Email" name="footer-mail" id="footer-mail">
+                                        <label for="footer-mail"></label><input type="text" Placeholder="Email" name="footer-mail" id="footer-mail">
                                         <button><i class="zmdi zmdi-mail-send"></i></button>
                                     </form>
                                 </li>

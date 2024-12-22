@@ -7,7 +7,7 @@
         <div class="container">
             <ol class="breadcrumb breadcrumb-list">
                 <li class="breadcrumb-item">
-                    <a href="index.html">Home</a>
+                    <a href="{{ path('app_home_index') }}">Home</a>
                 </li>
                 <li class="breadcrumb-item active">Compare</li>
             </ol>
@@ -29,11 +29,15 @@
                                 <form action="#">
                                     <p class="form-row-first">
                                         <label>Username or email <span class="required">*</span></label>
-                                        <input type="text"/>
+                                        <label>
+                                            <input type="text"/>
+                                        </label>
                                     </p>
                                     <p class="form-row-last">
                                         <label>Password <span class="required">*</span></label>
-                                        <input type="text"/>
+                                        <label>
+                                            <input type="text"/>
+                                        </label>
                                     </p>
                                     <p class="form-row align-items-center">
                                         <input type="submit" value="Login"/>
@@ -55,7 +59,9 @@
                             <div class="coupon-info">
                                 <form action="#">
                                     <p class="checkout-coupon">
-                                        <input type="text" class="code" placeholder="Coupon code"/>
+                                        <label>
+                                            <input type="text" class="code" placeholder="Coupon code"/>
+                                        </label>
                                         <input type="submit" value="Apply Coupon"/>
                                     </p>
                                 </form>
@@ -79,87 +85,111 @@
                             <div class="col-md-12">
                                 <div class="country-select clearfix mb-30">
                                     <label>Country <span class="required">*</span></label>
-                                    <select class="wide">
-                                        <option value="volvo">Bangladesh</option>
-                                        <option value="saab">Algeria</option>
-                                        <option value="mercedes">Afghanistan</option>
-                                        <option value="audi">Ghana</option>
-                                        <option value="audi2">Albania</option>
-                                        <option value="audi3">Bahrain</option>
-                                        <option value="audi4">Colombia</option>
-                                        <option value="audi5">Dominican Republic</option>
-                                    </select>
+                                    <label>
+                                        <select class="wide">
+                                            <option value="volvo">Bangladesh</option>
+                                            <option value="saab">Algeria</option>
+                                            <option value="mercedes">Afghanistan</option>
+                                            <option value="audi">Ghana</option>
+                                            <option value="audi2">Albania</option>
+                                            <option value="audi3">Bahrain</option>
+                                            <option value="audi4">Colombia</option>
+                                            <option value="audi5">Dominican Republic</option>
+                                        </select>
+                                    </label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="checkout-form-list mb-sm-30">
                                     <label>First Name <span class="required">*</span></label>
-                                    <input type="text" placeholder=""/>
+                                    <label>
+                                        <input type="text" placeholder=""/>
+                                    </label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="checkout-form-list mb-30">
                                     <label>Last Name <span class="required">*</span></label>
-                                    <input type="text" placeholder=""/>
+                                    <label>
+                                        <input type="text" placeholder=""/>
+                                    </label>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="checkout-form-list mb-30">
                                     <label>Company Name</label>
-                                    <input type="text" placeholder=""/>
+                                    <label>
+                                        <input type="text" placeholder=""/>
+                                    </label>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="checkout-form-list">
                                     <label>Address <span class="required">*</span></label>
-                                    <input type="text" placeholder="Street address"/>
+                                    <label>
+                                        <input type="text" placeholder="Street address"/>
+                                    </label>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="checkout-form-list mtb-30">
-                                    <input type="text" placeholder="Apartment, suite, unit etc. (optional)"/>
+                                    <label>
+                                        <input type="text" placeholder="Apartment, suite, unit etc. (optional)"/>
+                                    </label>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="checkout-form-list mb-30">
                                     <label>Town / City <span class="required">*</span></label>
-                                    <input type="text" placeholder="Town / City"/>
+                                    <label>
+                                        <input type="text" placeholder="Town / City"/>
+                                    </label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="checkout-form-list mb-30">
                                     <label>State / County <span class="required">*</span></label>
-                                    <input type="text" placeholder=""/>
+                                    <label>
+                                        <input type="text" placeholder=""/>
+                                    </label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="checkout-form-list mb-30">
                                     <label>Postcode / Zip <span class="required">*</span></label>
-                                    <input type="text" placeholder="Postcode / Zip"/>
+                                    <label>
+                                        <input type="text" placeholder="Postcode / Zip"/>
+                                    </label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="checkout-form-list mb-30">
                                     <label>Email Address <span class="required">*</span></label>
-                                    <input type="email" placeholder=""/>
+                                    <label>
+                                        <input type="email" placeholder=""/>
+                                    </label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="checkout-form-list mb-30">
                                     <label>Phone <span class="required">*</span></label>
-                                    <input type="text" placeholder="Postcode / Zip"/>
+                                    <label>
+                                        <input type="text" placeholder="Postcode / Zip"/>
+                                    </label>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="checkout-form-list create-acc mb-30">
-                                    <input id="cbox" type="checkbox"/>
+                                    <label for="cbox"></label><input id="cbox" type="checkbox"/>
                                     <label>Create an account?</label>
                                 </div>
                                 <div id="cbox_info" class="checkout-form-list create-accounts mb-25">
                                     <p class="mb-10">Create an account by entering the information below. If you are a
-                                        returning customer please login at the top of the page.</p>
+                                        returning customer please log in at the top of the page.</p>
                                     <label>Account password <span class="required">*</span></label>
-                                    <input type="password" placeholder="password"/>
+                                    <label>
+                                        <input type="password" placeholder="password"/>
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -167,7 +197,7 @@
                             <div class="ship-different-title">
                                 <h3>
                                     <label>Ship to a different address?</label>
-                                    <input id="ship-box" type="checkbox"/>
+                                    <label for="ship-box"></label><input id="ship-box" type="checkbox"/>
                                 </h3>
                             </div>
                             <div id="ship-box-info">
@@ -175,83 +205,105 @@
                                     <div class="col-md-12">
                                         <div class="country-select clearfix mb-30">
                                             <label>Country <span class="required">*</span></label>
-                                            <select class="wide">
-                                                <option value="volvo">Bangladesh</option>
-                                                <option value="saab">Algeria</option>
-                                                <option value="mercedes">Afghanistan</option>
-                                                <option value="audi">Ghana</option>
-                                                <option value="audi2">Albania</option>
-                                                <option value="audi3">Bahrain</option>
-                                                <option value="audi4">Colombia</option>
-                                                <option value="audi5">Dominican Republic</option>
-                                            </select>
+                                            <label>
+                                                <select class="wide">
+                                                    <option value="volvo">Bangladesh</option>
+                                                    <option value="saab">Algeria</option>
+                                                    <option value="mercedes">Afghanistan</option>
+                                                    <option value="audi">Ghana</option>
+                                                    <option value="audi2">Albania</option>
+                                                    <option value="audi3">Bahrain</option>
+                                                    <option value="audi4">Colombia</option>
+                                                    <option value="audi5">Dominican Republic</option>
+                                                </select>
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="checkout-form-list mb-30">
                                             <label>First Name <span class="required">*</span></label>
-                                            <input type="text" placeholder=""/>
+                                            <label>
+                                                <input type="text" placeholder=""/>
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="checkout-form-list mb-30">
                                             <label>Last Name <span class="required">*</span></label>
-                                            <input type="text" placeholder=""/>
+                                            <label>
+                                                <input type="text" placeholder=""/>
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="checkout-form-list mb-30">
                                             <label>Company Name</label>
-                                            <input type="text" placeholder=""/>
+                                            <label>
+                                                <input type="text" placeholder=""/>
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="checkout-form-list mb-30">
                                             <label>Address <span class="required">*</span></label>
-                                            <input type="text" placeholder="Street address"/>
+                                            <label>
+                                                <input type="text" placeholder="Street address"/>
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="checkout-form-list mb-30">
-                                            <input type="text" placeholder="Apartment, suite, unit etc. (optional)"/>
+                                            <label>
+                                                <input type="text" placeholder="Apartment, suite, unit etc. (optional)"/>
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="checkout-form-list mb-30">
                                             <label>Town / City <span class="required">*</span></label>
-                                            <input type="text" placeholder="Town / City"/>
+                                            <label>
+                                                <input type="text" placeholder="Town / City"/>
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="checkout-form-list mb-30">
                                             <label>State / County <span class="required">*</span></label>
-                                            <input type="text" placeholder=""/>
+                                            <label>
+                                                <input type="text" placeholder=""/>
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="checkout-form-list mb-30">
                                             <label>Postcode / Zip <span class="required">*</span></label>
-                                            <input type="text" placeholder="Postcode / Zip"/>
+                                            <label>
+                                                <input type="text" placeholder="Postcode / Zip"/>
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="checkout-form-list mb-30">
                                             <label>Email Address <span class="required">*</span></label>
-                                            <input type="email" placeholder=""/>
+                                            <label>
+                                                <input type="email" placeholder=""/>
+                                            </label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="checkout-form-list mb-30">
                                             <label>Phone <span class="required">*</span></label>
-                                            <input type="text" placeholder="Postcode / Zip"/>
+                                            <label>
+                                                <input type="text" placeholder="Postcode / Zip"/>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="order-notes">
                                     <div class="checkout-form-list">
                                         <label>Order Notes</label>
-                                        <textarea id="checkout-mess" cols="30" rows="10"
-                                                  placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
+                                        <label for="checkout-mess"></label><textarea id="checkout-mess" cols="30" rows="10"
+                                                                                     placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
                                     </div>
                                 </div>
                             </div>

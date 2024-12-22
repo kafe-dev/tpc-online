@@ -14,7 +14,9 @@
                 <div class="col-md-6  order-3 order-md-2">
                     <div class=" categorie-search-box">
                         <form action="#">
-                            <input type="text" name="search" placeholder="Search your keyword">
+                            <label>
+                                <input type="text" name="search" placeholder="Search your keyword">
+                            </label>
                             <button>
                                 <span class="ti-search"></span>
                             </button>
@@ -62,7 +64,7 @@
                                         </div>
                                         <div class="cart-content">
                                             <h6>
-                                                <a href="product-details#">Printed Round Neck</a>
+                                                <a href="{{ path('app_home_product_details') }}">Printed Round Neck</a>
                                             </h6>
                                             <span class="cart-price">45.00</span>
                                             <span>Size: XL</span>
@@ -90,7 +92,7 @@
                                             </li>
                                         </ul>
                                         <div class="cart-actions text-center">
-                                            <a class="cart-checkout" href="checkout#">Checkout</a>
+                                            <a class="cart-checkout" href="{{ path('app_home_checkout') }}">Checkout</a>
                                         </div>
                                     </div>
                                     <!-- Cart Footer Inner End -->
@@ -192,9 +194,9 @@
                                     <li>
                                         <h3>My Account </h3>
                                         <ul>
-                                            <li><a href="register#">Register</a></li>
-                                            <li><a href="login#">Login</a></li>
-                                            <li><a href="account#">My Account</a></li>
+                                            <li><a href="{{ path('app_home_register') }}">Register</a></li>
+                                            <li><a href="{{ path('app_home_login') }}">Login</a></li>
+                                            <li><a href="{{ path('app_home_login') }}">My Account</a></li>
                                         </ul>
                                     </li>
                                     <li>
