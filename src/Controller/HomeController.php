@@ -107,4 +107,17 @@ class HomeController extends AbstractController
 
         return $this->render('home/wishlist.html.twig', ['title' => $title]);
     }
+
+    /**
+     * Action Contact Us.
+     *
+     * This is Contact Us page controller
+     */
+    #[Route('/contact-us', name: 'contact_us')]
+    public function contact(): Response
+    {
+        $title = "Contact Us";
+
+        return $this->render('home/contact_us.html.twig', ['title' => $title]);
+    }
 }
