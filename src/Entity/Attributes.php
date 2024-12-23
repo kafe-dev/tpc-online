@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AttributesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AttributesRepository::class)]
@@ -21,6 +23,17 @@ class Attributes
 
     #[ORM\Column]
     private array $data = [];
+
+    /**
+     * @var Collection<int, ProductVariantsAttributes>
+     */
+    #[ORM\OneToMany(targetEntity: ProductVariantsAttributes::class, mappedBy: 'attribute', orphanRemoval: true)]
+    private Collection $productVariantsAttributes;
+
+    public function __construct()
+    {
+        $this->productVariantsAttributes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -59,6 +72,36 @@ class Attributes
     public function setData(array $data): static
     {
         $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductVariantsAttributes>
+     */
+    public function getProductVariantsAttributes(): Collection
+    {
+        return $this->productVariantsAttributes;
+    }
+
+    public function addProductVariantsAttribute(ProductVariantsAttributes $productVariantsAttribute): static
+    {
+        if (!$this->productVariantsAttributes->contains($productVariantsAttribute)) {
+            $this->productVariantsAttributes->add($productVariantsAttribute);
+            $productVariantsAttribute->setAttribute($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductVariantsAttribute(ProductVariantsAttributes $productVariantsAttribute): static
+    {
+        if ($this->productVariantsAttributes->removeElement($productVariantsAttribute)) {
+            // set the owning side to null (unless already changed)
+            if ($productVariantsAttribute->getAttribute() === $this) {
+                $productVariantsAttribute->setAttribute(null);
+            }
+        }
 
         return $this;
     }

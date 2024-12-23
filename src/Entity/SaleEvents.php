@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SaleEventsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
@@ -37,6 +39,24 @@ class SaleEvents
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
+
+    /**
+     * @var Collection<int, SaleEventsMeta>
+     */
+    #[ORM\OneToMany(targetEntity: SaleEventsMeta::class, mappedBy: 'sale_event', orphanRemoval: true)]
+    private Collection $saleEventsMetas;
+
+    /**
+     * @var Collection<int, ProductVariantSaleEvent>
+     */
+    #[ORM\OneToMany(targetEntity: ProductVariantSaleEvent::class, mappedBy: 'sale_event', orphanRemoval: true)]
+    private Collection $productVariantSaleEvents;
+
+    public function __construct()
+    {
+        $this->saleEventsMetas = new ArrayCollection();
+        $this->productVariantSaleEvents = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -140,5 +160,65 @@ class SaleEvents
     public function lifecycleUpdate(): void
     {
         $this->setUpdatedAt(new \DateTimeImmutable());
+    }
+
+    /**
+     * @return Collection<int, SaleEventsMeta>
+     */
+    public function getSaleEventsMetas(): Collection
+    {
+        return $this->saleEventsMetas;
+    }
+
+    public function addSaleEventsMeta(SaleEventsMeta $saleEventsMeta): static
+    {
+        if (!$this->saleEventsMetas->contains($saleEventsMeta)) {
+            $this->saleEventsMetas->add($saleEventsMeta);
+            $saleEventsMeta->setSaleEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSaleEventsMeta(SaleEventsMeta $saleEventsMeta): static
+    {
+        if ($this->saleEventsMetas->removeElement($saleEventsMeta)) {
+            // set the owning side to null (unless already changed)
+            if ($saleEventsMeta->getSaleEvent() === $this) {
+                $saleEventsMeta->setSaleEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductVariantSaleEvent>
+     */
+    public function getProductVariantSaleEvents(): Collection
+    {
+        return $this->productVariantSaleEvents;
+    }
+
+    public function addProductVariantSaleEvent(ProductVariantSaleEvent $productVariantSaleEvent): static
+    {
+        if (!$this->productVariantSaleEvents->contains($productVariantSaleEvent)) {
+            $this->productVariantSaleEvents->add($productVariantSaleEvent);
+            $productVariantSaleEvent->setSaleEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductVariantSaleEvent(ProductVariantSaleEvent $productVariantSaleEvent): static
+    {
+        if ($this->productVariantSaleEvents->removeElement($productVariantSaleEvent)) {
+            // set the owning side to null (unless already changed)
+            if ($productVariantSaleEvent->getSaleEvent() === $this) {
+                $productVariantSaleEvent->setSaleEvent(null);
+            }
+        }
+
+        return $this;
     }
 }

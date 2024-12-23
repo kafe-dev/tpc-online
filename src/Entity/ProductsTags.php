@@ -14,37 +14,39 @@ class ProductsTags
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $product_id = null;
+    #[ORM\ManyToOne(targetEntity: Products::class, cascade: ['persist', 'remove'], inversedBy: 'productsTags')]
+    #[ORM\JoinColumn(name: 'product_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Products $product = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $tag_id = null;
+    #[ORM\ManyToOne(targetEntity: Tags::class, cascade: ['persist', 'remove'], inversedBy: 'productsTags')]
+    #[ORM\JoinColumn(name: 'tag_id', referencedColumnName: 'id', nullable: false)]
+    private ?Tags $tag = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getProductId(): ?string
+    public function getProduct(): ?Products
     {
-        return $this->product_id;
+        return $this->product;
     }
 
-    public function setProductId(string $product_id): static
+    public function setProduct(?Products $product): static
     {
-        $this->product_id = $product_id;
+        $this->product = $product;
 
         return $this;
     }
 
-    public function getTagId(): ?string
+    public function getTag(): ?Tags
     {
-        return $this->tag_id;
+        return $this->tag;
     }
 
-    public function setTagId(string $tag_id): static
+    public function setTag(?Tags $tag): static
     {
-        $this->tag_id = $tag_id;
+        $this->tag = $tag;
 
         return $this;
     }

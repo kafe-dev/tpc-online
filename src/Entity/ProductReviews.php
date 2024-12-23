@@ -16,11 +16,13 @@ class ProductReviews
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $product_id = null;
+    #[ORM\ManyToOne(targetEntity: Products::class, cascade: ['persist', 'remove'], inversedBy: 'productReviews')]
+    #[ORM\JoinColumn(name: 'product_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Products $product = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $user_id = null;
+    #[ORM\ManyToOne(targetEntity: Users::class, cascade: ['persist', 'remove'], inversedBy: 'productReviews')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Users $user = null;
 
     #[ORM\Column(length: 255)]
     private ?string $title = null;
@@ -49,30 +51,6 @@ class ProductReviews
     public function setId(int $id): static
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    public function getProductId(): ?string
-    {
-        return $this->product_id;
-    }
-
-    public function setProductId(string $product_id): static
-    {
-        $this->product_id = $product_id;
-
-        return $this;
-    }
-
-    public function getUserId(): ?string
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(string $user_id): static
-    {
-        $this->user_id = $user_id;
 
         return $this;
     }
@@ -162,5 +140,29 @@ class ProductReviews
     public function lifecycleUpdate(): void
     {
         $this->setUpdatedAt(new \DateTimeImmutable());
+    }
+
+    public function getProduct(): ?Products
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?Products $product): static
+    {
+        $this->product = $product;
+
+        return $this;
+    }
+
+    public function getUser(): ?Users
+    {
+        return $this->user;
+    }
+
+    public function setUser(?Users $user): static
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

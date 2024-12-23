@@ -14,8 +14,9 @@ class ProductComboItems
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $parent_id = null;
+    #[ORM\ManyToOne(targetEntity: Products::class, cascade: ['persist', 'remove'], inversedBy: 'productComboItems')]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Products $parent = null;
 
     #[ORM\Column]
     private array $child_ids = [];
@@ -30,18 +31,6 @@ class ProductComboItems
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getParentId(): ?string
-    {
-        return $this->parent_id;
-    }
-
-    public function setParentId(string $parent_id): static
-    {
-        $this->parent_id = $parent_id;
-
-        return $this;
     }
 
     public function getChildIds(): array
@@ -76,6 +65,18 @@ class ProductComboItems
     public function setDiscountType(int $discount_type): static
     {
         $this->discount_type = $discount_type;
+
+        return $this;
+    }
+
+    public function getParent(): ?Products
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?Products $parent): static
+    {
+        $this->parent = $parent;
 
         return $this;
     }

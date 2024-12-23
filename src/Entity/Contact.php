@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
 #[ORM\Table(name: 'contacts')]
+#[ORM\HasLifecycleCallbacks]
 class Contact
 {
     #[ORM\Id]
@@ -16,8 +17,9 @@ class Contact
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $user_id = null;
+    #[ORM\ManyToOne(targetEntity: Users::class, cascade: ['persist', 'remove'], inversedBy: 'contacts')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Users $user = null;
 
     #[ORM\Column(length: 255)]
     private ?string $email = null;
@@ -37,8 +39,8 @@ class Contact
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $status = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $opened_at = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $opened_at = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $replied_at = null;
@@ -46,16 +48,21 @@ class Contact
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $rejected_at = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
-    public function __construct()
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function lifecycle(): void
     {
-        $this->created_at = is_null($this->created_at) ? new DateTime() : $this->created_at;
-        $this->updated_at = new DateTime();
+        $this->setUpdatedAt(new \DateTime());
+
+        if (is_null($this->getCreatedAt())) {
+            $this->setCreatedAt(new \DateTimeImmutable());
+        }
     }
 
     public function getId(): ?int
@@ -66,18 +73,6 @@ class Contact
     public function setId(int $id): static
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    public function getUserId(): ?string
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(string $user_id): static
-    {
-        $this->user_id = $user_id;
 
         return $this;
     }
@@ -141,12 +136,12 @@ class Contact
         return $this;
     }
 
-    public function getOpenedAt(): ?\DateTimeImmutable
+    public function getOpenedAt(): ?\DateTimeInterface
     {
         return $this->opened_at;
     }
 
-    public function setOpenedAt(?\DateTimeImmutable $opened_at): static
+    public function setOpenedAt(?\DateTimeInterface $opened_at): static
     {
         $this->opened_at = $opened_at;
 
@@ -197,6 +192,18 @@ class Contact
     public function setUpdatedAt(\DateTimeInterface $updated_at): static
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getUser(): ?Users
+    {
+        return $this->user;
+    }
+
+    public function setUser(?Users $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

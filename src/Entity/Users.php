@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UsersRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
@@ -19,8 +21,12 @@ class Users
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $parent_id = null;
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'children', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
+    private Collection $parent;
 
     #[ORM\Column(length: 255)]
     private ?string $username = null;
@@ -54,6 +60,73 @@ class Users
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
+    /**
+     * @var Collection<int, UsersGroups>
+     */
+    #[ORM\OneToMany(targetEntity: UsersGroups::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $usersGroups;
+
+    #[ORM\OneToOne(targetEntity: UserProfiles::class, mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?UserProfiles $userProfiles = null;
+
+    /**
+     * @var Collection<int, UserAddresses>
+     */
+    #[ORM\OneToMany(targetEntity: UserAddresses::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $userAddresses;
+
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'parent')]
+    private ?self $children = null;
+
+    /**
+     * @var Collection<int, ProductReviews>
+     */
+    #[ORM\OneToMany(targetEntity: ProductReviews::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $productReviews;
+
+    /**
+     * @var Collection<int, Wishlist>
+     */
+    #[ORM\OneToMany(targetEntity: Wishlist::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $wishlists;
+
+    /**
+     * @var Collection<int, Loyalty>
+     */
+    #[ORM\OneToMany(targetEntity: Loyalty::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $loyalties;
+
+    /**
+     * @var Collection<int, Contact>
+     */
+    #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $contacts;
+
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'sender', orphanRemoval: true)]
+    private Collection $senderNotis;
+
+    /**
+     * @var Collection<int, Notification>
+     */
+    #[ORM\OneToMany(targetEntity: Notification::class, mappedBy: 'receiver', orphanRemoval: true)]
+    private Collection $receiverNotis;
+
+    public function __construct()
+    {
+        $this->usersGroups = new ArrayCollection();
+        $this->userAddresses = new ArrayCollection();
+        $this->parent = new ArrayCollection();
+        $this->productReviews = new ArrayCollection();
+        $this->wishlists = new ArrayCollection();
+        $this->loyalties = new ArrayCollection();
+        $this->contacts = new ArrayCollection();
+        $this->senderNotis = new ArrayCollection();
+        $this->receiverNotis = new ArrayCollection();
+    }
+
     //	Getters and setters
 
     public function getId(): ?int
@@ -64,18 +137,6 @@ class Users
     public function setId(int $id): static
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    public function getParentId(): ?int
-    {
-        return $this->parent_id;
-    }
-
-    public function setParentId(?int $parent_id): static
-    {
-        $this->parent_id = $parent_id;
 
         return $this;
     }
@@ -213,6 +274,305 @@ class Users
     public function lifecycleUpdate(): void
     {
         $this->setUpdatedAt(new \DateTimeImmutable());
+    }
+
+    /**
+     * @return Collection<int, UsersGroups>
+     */
+    public function getUsersGroups(): Collection
+    {
+        return $this->usersGroups;
+    }
+
+    public function addUsersGroup(UsersGroups $usersGroup): static
+    {
+        if (!$this->usersGroups->contains($usersGroup)) {
+            $this->usersGroups->add($usersGroup);
+            $usersGroup->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUsersGroup(UsersGroups $usersGroup): static
+    {
+        if ($this->usersGroups->removeElement($usersGroup)) {
+            // set the owning side to null (unless already changed)
+            if ($usersGroup->getUser() === $this) {
+                $usersGroup->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getUserProfiles(): ?UserProfiles
+    {
+        return $this->userProfiles;
+    }
+
+    public function setUserProfiles(UserProfiles $userProfiles): static
+    {
+        // set the owning side of the relation if necessary
+        if ($userProfiles->getUser() !== $this) {
+            $userProfiles->setUser($this);
+        }
+
+        $this->userProfiles = $userProfiles;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserAddresses>
+     */
+    public function getUserAddresses(): Collection
+    {
+        return $this->userAddresses;
+    }
+
+    public function addUserAddress(UserAddresses $userAddress): static
+    {
+        if (!$this->userAddresses->contains($userAddress)) {
+            $this->userAddresses->add($userAddress);
+            $userAddress->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserAddress(UserAddresses $userAddress): static
+    {
+        if ($this->userAddresses->removeElement($userAddress)) {
+            // set the owning side to null (unless already changed)
+            if ($userAddress->getUser() === $this) {
+                $userAddress->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getChildren(): ?self
+    {
+        return $this->children;
+    }
+
+    public function setChildren(?self $children): static
+    {
+        $this->children = $children;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getParent(): Collection
+    {
+        return $this->parent;
+    }
+
+    public function addParent(self $parent): static
+    {
+        if (!$this->parent->contains($parent)) {
+            $this->parent->add($parent);
+            $parent->setChildren($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParent(self $parent): static
+    {
+        if ($this->parent->removeElement($parent)) {
+            // set the owning side to null (unless already changed)
+            if ($parent->getChildren() === $this) {
+                $parent->setChildren(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductReviews>
+     */
+    public function getProductReviews(): Collection
+    {
+        return $this->productReviews;
+    }
+
+    public function addProductReview(ProductReviews $productReview): static
+    {
+        if (!$this->productReviews->contains($productReview)) {
+            $this->productReviews->add($productReview);
+            $productReview->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductReview(ProductReviews $productReview): static
+    {
+        if ($this->productReviews->removeElement($productReview)) {
+            // set the owning side to null (unless already changed)
+            if ($productReview->getUser() === $this) {
+                $productReview->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Wishlist>
+     */
+    public function getWishlists(): Collection
+    {
+        return $this->wishlists;
+    }
+
+    public function addWishlist(Wishlist $wishlist): static
+    {
+        if (!$this->wishlists->contains($wishlist)) {
+            $this->wishlists->add($wishlist);
+            $wishlist->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWishlist(Wishlist $wishlist): static
+    {
+        if ($this->wishlists->removeElement($wishlist)) {
+            // set the owning side to null (unless already changed)
+            if ($wishlist->getUser() === $this) {
+                $wishlist->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Loyalty>
+     */
+    public function getLoyalties(): Collection
+    {
+        return $this->loyalties;
+    }
+
+    public function addLoyalty(Loyalty $loyalty): static
+    {
+        if (!$this->loyalties->contains($loyalty)) {
+            $this->loyalties->add($loyalty);
+            $loyalty->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLoyalty(Loyalty $loyalty): static
+    {
+        if ($this->loyalties->removeElement($loyalty)) {
+            // set the owning side to null (unless already changed)
+            if ($loyalty->getUser() === $this) {
+                $loyalty->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Contact>
+     */
+    public function getContacts(): Collection
+    {
+        return $this->contacts;
+    }
+
+    public function addContact(Contact $contact): static
+    {
+        if (!$this->contacts->contains($contact)) {
+            $this->contacts->add($contact);
+            $contact->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContact(Contact $contact): static
+    {
+        if ($this->contacts->removeElement($contact)) {
+            // set the owning side to null (unless already changed)
+            if ($contact->getUser() === $this) {
+                $contact->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getSenderNotis(): Collection
+    {
+        return $this->senderNotis;
+    }
+
+    public function addSenderNoti(Notification $senderNoti): static
+    {
+        if (!$this->senderNotis->contains($senderNoti)) {
+            $this->senderNotis->add($senderNoti);
+            $senderNoti->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSenderNoti(Notification $senderNoti): static
+    {
+        if ($this->senderNotis->removeElement($senderNoti)) {
+            // set the owning side to null (unless already changed)
+            if ($senderNoti->getSender() === $this) {
+                $senderNoti->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getReceiverNotis(): Collection
+    {
+        return $this->receiverNotis;
+    }
+
+    public function addReceiverNoti(Notification $receiverNoti): static
+    {
+        if (!$this->receiverNotis->contains($receiverNoti)) {
+            $this->receiverNotis->add($receiverNoti);
+            $receiverNoti->setReceiver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceiverNoti(Notification $receiverNoti): static
+    {
+        if ($this->receiverNotis->removeElement($receiverNoti)) {
+            // set the owning side to null (unless already changed)
+            if ($receiverNoti->getReceiver() === $this) {
+                $receiverNoti->setReceiver(null);
+            }
+        }
+
+        return $this;
     }
 
 }

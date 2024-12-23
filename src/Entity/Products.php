@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProductsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
@@ -16,8 +18,9 @@ class Products
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::BIGINT, nullable: true)]
-    private ?string $supplier_id = null;
+    #[ORM\ManyToOne(targetEntity: Suppliers::class, cascade: ['persist', 'remove'], inversedBy: 'products')]
+    #[ORM\JoinColumn(name: 'supplier_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Suppliers $supplier = null;
 
     #[ORM\Column(length: 255)]
     private ?string $sku = null;
@@ -48,7 +51,7 @@ class Products
     private ?string $meta_keyword = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $meta_decription = null;
+    private ?string $meta_description = null;
 
     //	status: 0 = 'Inactive', 1 = 'Active', 2 = 'Draft'
     #[ORM\Column(options: ["default" => 0])]
@@ -60,6 +63,66 @@ class Products
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
+    /**
+     * @var Collection<int, ProductsCategories>
+     */
+    #[ORM\OneToMany(targetEntity: ProductsCategories::class, mappedBy: 'product', orphanRemoval: true)]
+    private Collection $productsCategories;
+
+    /**
+     * @var Collection<int, ProductReviews>
+     */
+    #[ORM\OneToMany(targetEntity: ProductReviews::class, mappedBy: 'product', orphanRemoval: true)]
+    private Collection $productReviews;
+
+    /**
+     * @var Collection<int, ProductsTags>
+     */
+    #[ORM\OneToMany(targetEntity: ProductsTags::class, mappedBy: 'product', orphanRemoval: true)]
+    private Collection $productsTags;
+
+    /**
+     * @var Collection<int, RelatedProducts>
+     */
+    #[ORM\OneToMany(targetEntity: RelatedProducts::class, mappedBy: 'from_target', orphanRemoval: true)]
+    private Collection $relatedProducts_from;
+
+    /**
+     * @var Collection<int, RelatedProducts>
+     */
+    #[ORM\OneToMany(targetEntity: RelatedProducts::class, mappedBy: 'target', orphanRemoval: true)]
+    private Collection $relatedProducts_target;
+
+    /**
+     * @var Collection<int, ProductComboItems>
+     */
+    #[ORM\OneToMany(targetEntity: ProductComboItems::class, mappedBy: 'parent', orphanRemoval: true)]
+    private Collection $productComboItems;
+
+    /**
+     * @var Collection<int, ProductVariants>
+     */
+    #[ORM\OneToMany(targetEntity: ProductVariants::class, mappedBy: 'product', orphanRemoval: true)]
+    private Collection $productVariants;
+
+    /**
+     * @var Collection<int, Wishlist>
+     */
+    #[ORM\OneToMany(targetEntity: Wishlist::class, mappedBy: 'product', orphanRemoval: true)]
+    private Collection $wishlists;
+
+    public function __construct()
+    {
+        $this->productsCategories = new ArrayCollection();
+        $this->productReviews = new ArrayCollection();
+        $this->productsTags = new ArrayCollection();
+        $this->relatedProducts_from = new ArrayCollection();
+        $this->relatedProducts_target = new ArrayCollection();
+        $this->productComboItems = new ArrayCollection();
+        $this->productVariants = new ArrayCollection();
+        $this->wishlists = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -68,18 +131,6 @@ class Products
     public function setId(int $id): static
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    public function getSupplierId(): ?string
-    {
-        return $this->supplier_id;
-    }
-
-    public function setSupplierId(?string $supplier_id): static
-    {
-        $this->supplier_id = $supplier_id;
 
         return $this;
     }
@@ -192,14 +243,14 @@ class Products
         return $this;
     }
 
-    public function getMetaDecription(): ?string
+    public function getMetaDescription(): ?string
     {
-        return $this->meta_decription;
+        return $this->meta_description;
     }
 
-    public function setMetaDecription(?string $meta_decription): static
+    public function setMetaDescription(?string $meta_description): static
     {
-        $this->meta_decription = $meta_decription;
+        $this->meta_description = $meta_description;
 
         return $this;
     }
@@ -253,5 +304,257 @@ class Products
     public function lifecycleUpdate(): void
     {
         $this->setUpdatedAt(new \DateTimeImmutable());
+    }
+
+    /**
+     * @return Collection<int, ProductsCategories>
+     */
+    public function getProductsCategories(): Collection
+    {
+        return $this->productsCategories;
+    }
+
+    public function addProductsCategory(ProductsCategories $productsCategory): static
+    {
+        if (!$this->productsCategories->contains($productsCategory)) {
+            $this->productsCategories->add($productsCategory);
+            $productsCategory->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductsCategory(ProductsCategories $productsCategory): static
+    {
+        if ($this->productsCategories->removeElement($productsCategory)) {
+            // set the owning side to null (unless already changed)
+            if ($productsCategory->getProduct() === $this) {
+                $productsCategory->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSupplier(): ?Suppliers
+    {
+        return $this->supplier;
+    }
+
+    public function setSupplier(?Suppliers $supplier): static
+    {
+        $this->supplier = $supplier;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductReviews>
+     */
+    public function getProductReviews(): Collection
+    {
+        return $this->productReviews;
+    }
+
+    public function addProductReview(ProductReviews $productReview): static
+    {
+        if (!$this->productReviews->contains($productReview)) {
+            $this->productReviews->add($productReview);
+            $productReview->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductReview(ProductReviews $productReview): static
+    {
+        if ($this->productReviews->removeElement($productReview)) {
+            // set the owning side to null (unless already changed)
+            if ($productReview->getProduct() === $this) {
+                $productReview->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductsTags>
+     */
+    public function getProductsTags(): Collection
+    {
+        return $this->productsTags;
+    }
+
+    public function addProductsTag(ProductsTags $productsTag): static
+    {
+        if (!$this->productsTags->contains($productsTag)) {
+            $this->productsTags->add($productsTag);
+            $productsTag->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductsTag(ProductsTags $productsTag): static
+    {
+        if ($this->productsTags->removeElement($productsTag)) {
+            // set the owning side to null (unless already changed)
+            if ($productsTag->getProduct() === $this) {
+                $productsTag->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RelatedProducts>
+     */
+    public function getRelatedProductsFrom(): Collection
+    {
+        return $this->relatedProducts_from;
+    }
+
+    public function addRelatedProductsFrom(RelatedProducts $relatedProductsFrom): static
+    {
+        if (!$this->relatedProducts_from->contains($relatedProductsFrom)) {
+            $this->relatedProducts_from->add($relatedProductsFrom);
+            $relatedProductsFrom->setFromTarget($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRelatedProductsFrom(RelatedProducts $relatedProductsFrom): static
+    {
+        if ($this->relatedProducts_from->removeElement($relatedProductsFrom)) {
+            // set the owning side to null (unless already changed)
+            if ($relatedProductsFrom->getFromTarget() === $this) {
+                $relatedProductsFrom->setFromTarget(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RelatedProducts>
+     */
+    public function getRelatedProductsTarget(): Collection
+    {
+        return $this->relatedProducts_target;
+    }
+
+    public function addRelatedProductsTarget(RelatedProducts $relatedProductsTarget): static
+    {
+        if (!$this->relatedProducts_target->contains($relatedProductsTarget)) {
+            $this->relatedProducts_target->add($relatedProductsTarget);
+            $relatedProductsTarget->setTarget($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRelatedProductsTarget(RelatedProducts $relatedProductsTarget): static
+    {
+        if ($this->relatedProducts_target->removeElement($relatedProductsTarget)) {
+            // set the owning side to null (unless already changed)
+            if ($relatedProductsTarget->getTarget() === $this) {
+                $relatedProductsTarget->setTarget(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductComboItems>
+     */
+    public function getProductComboItems(): Collection
+    {
+        return $this->productComboItems;
+    }
+
+    public function addProductComboItem(ProductComboItems $productComboItem): static
+    {
+        if (!$this->productComboItems->contains($productComboItem)) {
+            $this->productComboItems->add($productComboItem);
+            $productComboItem->setParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductComboItem(ProductComboItems $productComboItem): static
+    {
+        if ($this->productComboItems->removeElement($productComboItem)) {
+            // set the owning side to null (unless already changed)
+            if ($productComboItem->getParent() === $this) {
+                $productComboItem->setParent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductVariants>
+     */
+    public function getProductVariants(): Collection
+    {
+        return $this->productVariants;
+    }
+
+    public function addProductVariant(ProductVariants $productVariant): static
+    {
+        if (!$this->productVariants->contains($productVariant)) {
+            $this->productVariants->add($productVariant);
+            $productVariant->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductVariant(ProductVariants $productVariant): static
+    {
+        if ($this->productVariants->removeElement($productVariant)) {
+            // set the owning side to null (unless already changed)
+            if ($productVariant->getProduct() === $this) {
+                $productVariant->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Wishlist>
+     */
+    public function getWishlists(): Collection
+    {
+        return $this->wishlists;
+    }
+
+    public function addWishlist(Wishlist $wishlist): static
+    {
+        if (!$this->wishlists->contains($wishlist)) {
+            $this->wishlists->add($wishlist);
+            $wishlist->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWishlist(Wishlist $wishlist): static
+    {
+        if ($this->wishlists->removeElement($wishlist)) {
+            // set the owning side to null (unless already changed)
+            if ($wishlist->getProduct() === $this) {
+                $wishlist->setProduct(null);
+            }
+        }
+
+        return $this;
     }
 }

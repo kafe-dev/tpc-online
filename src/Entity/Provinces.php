@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ProvincesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,6 +27,17 @@ class Provinces
 
     #[ORM\Column(type: Types::DECIMAL, precision: 65, scale: 8)]
     private ?string $longitude = null;
+
+    /**
+     * @var Collection<int, Districts>
+     */
+    #[ORM\OneToMany(targetEntity: Districts::class, mappedBy: 'province', orphanRemoval: true)]
+    private Collection $districts;
+
+    public function __construct()
+    {
+        $this->districts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -82,6 +95,36 @@ class Provinces
     public function setLongitude(string $longitude): static
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Districts>
+     */
+    public function getDistricts(): Collection
+    {
+        return $this->districts;
+    }
+
+    public function addDistrict(Districts $district): static
+    {
+        if (!$this->districts->contains($district)) {
+            $this->districts->add($district);
+            $district->setProvince($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDistrict(Districts $district): static
+    {
+        if ($this->districts->removeElement($district)) {
+            // set the owning side to null (unless already changed)
+            if ($district->getProvince() === $this) {
+                $district->setProvince(null);
+            }
+        }
 
         return $this;
     }

@@ -13,11 +13,13 @@ class UserAddresses
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $user_id = null;
+    #[ORM\ManyToOne(targetEntity: Users::class, cascade: ['persist', 'remove'], inversedBy: 'userAddresses')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Users $user = null;
 
-    #[ORM\Column]
-    private ?int $commune_id = null;
+    #[ORM\OneToOne(targetEntity: Communes::class, inversedBy: 'userAddresses', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'commune_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Communes $commune = null;
 
     #[ORM\Column(length: 500)]
     private ?string $address = null;
@@ -37,30 +39,6 @@ class UserAddresses
     public function setId(int $id): static
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(int $user_id): static
-    {
-        $this->user_id = $user_id;
-
-        return $this;
-    }
-
-    public function getCommuneId(): ?int
-    {
-        return $this->commune_id;
-    }
-
-    public function setCommuneId(int $commune_id): static
-    {
-        $this->commune_id = $commune_id;
 
         return $this;
     }
@@ -97,6 +75,30 @@ class UserAddresses
     public function setType(int $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getUser(): ?Users
+    {
+        return $this->user;
+    }
+
+    public function setUser(?Users $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCommune(): ?Communes
+    {
+        return $this->commune;
+    }
+
+    public function setCommune(Communes $commune): static
+    {
+        $this->commune = $commune;
 
         return $this;
     }

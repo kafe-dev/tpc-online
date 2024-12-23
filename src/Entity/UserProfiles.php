@@ -14,6 +14,10 @@ class UserProfiles
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\OneToOne(targetEntity: Users::class, inversedBy: 'userProfiles', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Users $user = null;
+
     #[ORM\Column(type: Types::BIGINT)]
     private ?string $user_id = null;
 
@@ -128,6 +132,18 @@ class UserProfiles
     public function setAvatar(?string $avatar): static
     {
         $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function getUser(): ?Users
+    {
+        return $this->user;
+    }
+
+    public function setUser(Users $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

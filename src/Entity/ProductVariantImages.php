@@ -14,8 +14,9 @@ class ProductVariantImages
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $product_variant_id = null;
+    #[ORM\ManyToOne(targetEntity: ProductVariants::class, cascade: ['persist', 'remove'], inversedBy: 'productVariantImages')]
+    #[ORM\JoinColumn(name: 'product_variant_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?ProductVariants $product_variant = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $image = null;
@@ -26,18 +27,6 @@ class ProductVariantImages
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getProductVariantId(): ?string
-    {
-        return $this->product_variant_id;
-    }
-
-    public function setProductVariantId(string $product_variant_id): static
-    {
-        $this->product_variant_id = $product_variant_id;
-
-        return $this;
     }
 
     public function getImage(): ?string
@@ -60,6 +49,18 @@ class ProductVariantImages
     public function setPosition(int $position): static
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getProductVariant(): ?ProductVariants
+    {
+        return $this->product_variant;
+    }
+
+    public function setProductVariant(?ProductVariants $product_variant): static
+    {
+        $this->product_variant = $product_variant;
 
         return $this;
     }

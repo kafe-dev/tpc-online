@@ -14,11 +14,13 @@ class ProductsCategories
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $category_id = null;
+    #[ORM\ManyToOne(targetEntity: Categories::class, cascade: ['persist', 'remove'], inversedBy: 'productsCategories')]
+    #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Categories $category = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $product_id = null;
+    #[ORM\ManyToOne(targetEntity: Products::class, cascade: ['persist', 'remove'], inversedBy: 'productsCategories')]
+    #[ORM\JoinColumn(name: 'product_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Products $product = null;
 
     public function getId(): ?int
     {
@@ -32,26 +34,26 @@ class ProductsCategories
         return $this;
     }
 
-    public function getCategoryId(): ?string
+    public function getCategory(): ?Categories
     {
-        return $this->category_id;
+        return $this->category;
     }
 
-    public function setCategoryId(string $category_id): static
+    public function setCategory(?Categories $category): static
     {
-        $this->category_id = $category_id;
+        $this->category = $category;
 
         return $this;
     }
 
-    public function getProductId(): ?string
+    public function getProduct(): ?Products
     {
-        return $this->product_id;
+        return $this->product;
     }
 
-    public function setProductId(string $product_id): static
+    public function setProduct(?Products $product): static
     {
-        $this->product_id = $product_id;
+        $this->product = $product;
 
         return $this;
     }

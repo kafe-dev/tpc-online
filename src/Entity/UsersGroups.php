@@ -14,11 +14,13 @@ class UsersGroups
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $user_id = null;
+    #[ORM\ManyToOne(targetEntity: Users::class, cascade: ['persist', 'remove'], inversedBy: 'usersGroups')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Users $user = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $group_id = null;
+    #[ORM\ManyToOne(targetEntity: Groups::class, cascade: ['persist', 'remove'], inversedBy: 'usersGroups')]
+    #[ORM\JoinColumn(name: 'group_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Groups $group_ref = null;
 
     public function getId(): ?int
     {
@@ -32,26 +34,26 @@ class UsersGroups
         return $this;
     }
 
-    public function getUserId(): ?string
+    public function getUser(): ?Users
     {
-        return $this->user_id;
+        return $this->user;
     }
 
-    public function setUserId(string $user_id): static
+    public function setUser(?Users $user): static
     {
-        $this->user_id = $user_id;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getGroupId(): ?string
+    public function getGroupRef(): ?Groups
     {
-        return $this->group_id;
+        return $this->group_ref;
     }
 
-    public function setGroupId(string $group_id): static
+    public function setGroupRef(?Groups $group_ref): static
     {
-        $this->group_id = $group_id;
+        $this->group_ref = $group_ref;
 
         return $this;
     }

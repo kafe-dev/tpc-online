@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DistrictsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,14 +22,26 @@ class Districts
     #[ORM\Column(length: 255)]
     private ?string $code = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $province_id = null;
+    #[ORM\ManyToOne(targetEntity: Provinces::class, cascade: ['persist', 'remove'], inversedBy: 'districts')]
+    #[ORM\JoinColumn(name: 'province_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Provinces $province = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 65, scale: 8)]
     private ?string $latitude = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 65, scale: 8)]
     private ?string $longitude = null;
+
+    /**
+     * @var Collection<int, Communes>
+     */
+    #[ORM\OneToMany(targetEntity: Communes::class, mappedBy: 'district', orphanRemoval: true)]
+    private Collection $communes;
+
+    public function __construct()
+    {
+        $this->communes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -65,18 +79,6 @@ class Districts
         return $this;
     }
 
-    public function getProvinceId(): ?string
-    {
-        return $this->province_id;
-    }
-
-    public function setProvinceId(string $province_id): static
-    {
-        $this->province_id = $province_id;
-
-        return $this;
-    }
-
     public function getLatitude(): ?string
     {
         return $this->latitude;
@@ -97,6 +99,48 @@ class Districts
     public function setLongitude(string $longitude): static
     {
         $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function getProvince(): ?Provinces
+    {
+        return $this->province;
+    }
+
+    public function setProvince(?Provinces $province): static
+    {
+        $this->province = $province;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Communes>
+     */
+    public function getCommunes(): Collection
+    {
+        return $this->communes;
+    }
+
+    public function addCommune(Communes $commune): static
+    {
+        if (!$this->communes->contains($commune)) {
+            $this->communes->add($commune);
+            $commune->setDistrict($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommune(Communes $commune): static
+    {
+        if ($this->communes->removeElement($commune)) {
+            // set the owning side to null (unless already changed)
+            if ($commune->getDistrict() === $this) {
+                $commune->setDistrict(null);
+            }
+        }
 
         return $this;
     }

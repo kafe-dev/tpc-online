@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TagsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TagsRepository::class)]
@@ -27,6 +29,17 @@ class Tags
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $meta_description = null;
+
+    /**
+     * @var Collection<int, ProductsTags>
+     */
+    #[ORM\OneToMany(targetEntity: ProductsTags::class, mappedBy: 'tag', orphanRemoval: true)]
+    private Collection $productsTags;
+
+    public function __construct()
+    {
+        $this->productsTags = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -89,6 +102,36 @@ class Tags
     public function setMetaDescription(?string $meta_description): static
     {
         $this->meta_description = $meta_description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductsTags>
+     */
+    public function getProductsTags(): Collection
+    {
+        return $this->productsTags;
+    }
+
+    public function addProductsTag(ProductsTags $productsTag): static
+    {
+        if (!$this->productsTags->contains($productsTag)) {
+            $this->productsTags->add($productsTag);
+            $productsTag->setTag($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductsTag(ProductsTags $productsTag): static
+    {
+        if ($this->productsTags->removeElement($productsTag)) {
+            // set the owning side to null (unless already changed)
+            if ($productsTag->getTag() === $this) {
+                $productsTag->setTag(null);
+            }
+        }
 
         return $this;
     }
