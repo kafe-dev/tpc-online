@@ -10,16 +10,15 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Class DashboardController.
- * 
+ *
  * This is the default controller for this admin module.
  */
 #[Route('/admin', name: 'admin_dashboard_')]
 class DashboardController extends AbstractController
 {
-
     /**
      * Action index.
-     * 
+     *
      * This is the default action for this controller.
      */
     #[Route('/', name: 'index')]
