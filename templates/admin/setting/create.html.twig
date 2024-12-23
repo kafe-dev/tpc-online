@@ -1,0 +1,33 @@
+{% extends '_layouts/admin/main.html.twig' %}
+
+{% block stylesheets %}
+
+    {{ parent() }}
+{% endblock %}
+
+{% block main %}
+
+    <div class="row">
+        <div class="col-12">
+            <div>
+                <h4 class="header-title mb-3">{{ page_title ?? ' ' }}</h4>
+            </div>
+        </div>
+    </div>
+    <!-- end row -->
+
+    <div class="row">
+        <div class="col-lg-7">
+            <div>
+                <h5 class="font-14">Create new setting</h5>
+                <p class="sub-header">
+                    This is the create new setting page. You can create a new setting here.
+                    (<span style="color: red">*</span>) indicates required field.
+                </p>
+
+                {{ form(form) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
