@@ -15,11 +15,13 @@ class LoyaltyCoupon
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $loyalty_id = null;
+    #[ORM\ManyToOne(targetEntity: Loyalty::class, cascade: ['persist', 'remove'], inversedBy: 'loyaltyCoupons')]
+    #[ORM\JoinColumn(name: 'loyalty_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Loyalty $loyalty = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $coupon_id = null;
+    #[ORM\ManyToOne(targetEntity: Coupon::class, cascade: ['persist', 'remove'], inversedBy: 'loyaltyCoupons')]
+    #[ORM\JoinColumn(name: 'coupon_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Coupon $coupon = null;
 
     public function getId(): ?int
     {
@@ -33,26 +35,26 @@ class LoyaltyCoupon
         return $this;
     }
 
-    public function getLoyaltyId(): ?string
+    public function getLoyalty(): ?Loyalty
     {
-        return $this->loyalty_id;
+        return $this->loyalty;
     }
 
-    public function setLoyaltyId(string $loyalty_id): static
+    public function setLoyalty(?Loyalty $loyalty): static
     {
-        $this->loyalty_id = $loyalty_id;
+        $this->loyalty = $loyalty;
 
         return $this;
     }
 
-    public function getCouponId(): ?string
+    public function getCoupon(): ?Coupon
     {
-        return $this->coupon_id;
+        return $this->coupon;
     }
 
-    public function setCouponId(string $coupon_id): static
+    public function setCoupon(?Coupon $coupon): static
     {
-        $this->coupon_id = $coupon_id;
+        $this->coupon = $coupon;
 
         return $this;
     }

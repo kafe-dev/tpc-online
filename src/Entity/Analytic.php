@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\AnalyticRepository;
-use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AnalyticRepository::class)]
 #[ORM\Table(name: 'analytics')]
+#[ORM\HasLifecycleCallbacks]
 class Analytic
 {
     #[ORM\Id]
@@ -16,22 +16,28 @@ class Analytic
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $category_id = null;
+    #[ORM\ManyToOne(targetEntity: AnalyticCategory::class, cascade: ['persist', 'remove'], inversedBy: 'analytics')]
+    #[ORM\JoinColumn(name: 'analytic_category_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?AnalyticCategory $analytic_category = null;
 
     #[ORM\Column]
     private array $data = [];
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $created_at = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
-    public function __construct()
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function lifecycle(): void
     {
-        $this->created_at = is_null($this->created_at) ? new DateTime() : $this->created_at;
-        $this->updated_at = new DateTime();
+        $this->setUpdatedAt(new \DateTime());
+
+        if (is_null($this->getCreatedAt())) {
+            $this->setCreatedAt(new \DateTimeImmutable());
+        }
     }
 
     public function getId(): ?int
@@ -42,18 +48,6 @@ class Analytic
     public function setId(int $id): static
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    public function getCategoryId(): ?string
-    {
-        return $this->category_id;
-    }
-
-    public function setCategoryId(string $category_id): static
-    {
-        $this->category_id = $category_id;
 
         return $this;
     }
@@ -70,12 +64,12 @@ class Analytic
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): static
+    public function setCreatedAt(\DateTimeImmutable $created_at): static
     {
         $this->created_at = $created_at;
 
@@ -90,6 +84,18 @@ class Analytic
     public function setUpdatedAt(\DateTimeInterface $updated_at): static
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getAnalyticCategory(): ?AnalyticCategory
+    {
+        return $this->analytic_category;
+    }
+
+    public function setAnalyticCategory(?AnalyticCategory $analytic_category): static
+    {
+        $this->analytic_category = $analytic_category;
 
         return $this;
     }

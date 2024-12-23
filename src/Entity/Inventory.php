@@ -4,11 +4,14 @@ namespace App\Entity;
 
 use App\Repository\InventoryRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: InventoryRepository::class)]
 #[ORM\Table(name: 'inventories')]
+#[ORM\HasLifecycleCallbacks]
 class Inventory
 {
     #[ORM\Id]
@@ -19,8 +22,9 @@ class Inventory
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $commune_id = null;
+    #[ORM\ManyToOne(targetEntity: Commune::class, cascade: ['persist', 'remove'], inversedBy: 'inventories')]
+    #[ORM\JoinColumn(name: 'commune_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Commune $commune = null;
 
     #[ORM\Column(length: 500)]
     private ?string $address = null;
@@ -39,16 +43,32 @@ class Inventory
     #[ORM\Column]
     private ?int $priority = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $created_at = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
+    /**
+     * @var Collection<int, ProductVariantInventory>
+     */
+    #[ORM\OneToMany(targetEntity: ProductVariantInventory::class, mappedBy: 'inventory', orphanRemoval: true)]
+    private Collection $productVariantInventories;
+
     public function __construct()
     {
-        $this->created_at = is_null($this->created_at) ? new DateTime() : $this->created_at;
-        $this->updated_at = new DateTime();
+        $this->productVariantInventories = new ArrayCollection();
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function lifecycle(): void
+    {
+        $this->setUpdatedAt(new \DateTime());
+
+        if (is_null($this->getCreatedAt())) {
+            $this->setCreatedAt(new \DateTimeImmutable());
+        }
     }
 
     public function getId(): ?int
@@ -71,18 +91,6 @@ class Inventory
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getCommuneId(): ?string
-    {
-        return $this->commune_id;
-    }
-
-    public function setCommuneId(string $commune_id): static
-    {
-        $this->commune_id = $commune_id;
 
         return $this;
     }
@@ -146,12 +154,12 @@ class Inventory
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): static
+    public function setCreatedAt(\DateTimeImmutable $created_at): static
     {
         $this->created_at = $created_at;
 
@@ -166,6 +174,48 @@ class Inventory
     public function setUpdatedAt(\DateTimeInterface $updated_at): static
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getCommune(): ?Commune
+    {
+        return $this->commune;
+    }
+
+    public function setCommune(?Commune $commune): static
+    {
+        $this->commune = $commune;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ProductVariantInventory>
+     */
+    public function getProductVariantInventories(): Collection
+    {
+        return $this->productVariantInventories;
+    }
+
+    public function addProductVariantInventory(ProductVariantInventory $productVariantInventory): static
+    {
+        if (!$this->productVariantInventories->contains($productVariantInventory)) {
+            $this->productVariantInventories->add($productVariantInventory);
+            $productVariantInventory->setInventory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProductVariantInventory(ProductVariantInventory $productVariantInventory): static
+    {
+        if ($this->productVariantInventories->removeElement($productVariantInventory)) {
+            // set the owning side to null (unless already changed)
+            if ($productVariantInventory->getInventory() === $this) {
+                $productVariantInventory->setInventory(null);
+            }
+        }
 
         return $this;
     }

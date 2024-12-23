@@ -15,11 +15,13 @@ class ProductVariantInventory
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $product_variant_id = null;
+    #[ORM\ManyToOne(targetEntity: Inventory::class, cascade: ['persist', 'remove'], inversedBy: 'productVariantInventories')]
+    #[ORM\JoinColumn(name: 'inventory_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Inventory $inventory = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $inventory_id = null;
+    #[ORM\ManyToOne(targetEntity: ProductVariant::class, cascade: ['persist', 'remove'], inversedBy: 'productVariantInventories')]
+    #[ORM\JoinColumn(name: 'product_variant_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?ProductVariant $product_variant = null;
 
     #[ORM\Column]
     private ?int $stock = null;
@@ -36,30 +38,6 @@ class ProductVariantInventory
         return $this;
     }
 
-    public function getProductVariantId(): ?string
-    {
-        return $this->product_variant_id;
-    }
-
-    public function setProductVariantId(string $product_variant_id): static
-    {
-        $this->product_variant_id = $product_variant_id;
-
-        return $this;
-    }
-
-    public function getInventoryId(): ?string
-    {
-        return $this->inventory_id;
-    }
-
-    public function setInventoryId(string $inventory_id): static
-    {
-        $this->inventory_id = $inventory_id;
-
-        return $this;
-    }
-
     public function getStock(): ?int
     {
         return $this->stock;
@@ -68,6 +46,30 @@ class ProductVariantInventory
     public function setStock(int $stock): static
     {
         $this->stock = $stock;
+
+        return $this;
+    }
+
+    public function getInventory(): ?Inventory
+    {
+        return $this->inventory;
+    }
+
+    public function setInventory(?Inventory $inventory): static
+    {
+        $this->inventory = $inventory;
+
+        return $this;
+    }
+
+    public function getProductVariant(): ?ProductVariant
+    {
+        return $this->product_variant;
+    }
+
+    public function setProductVariant(?ProductVariant $product_variant): static
+    {
+        $this->product_variant = $product_variant;
 
         return $this;
     }

@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SupplierMetaRepository::class)]
+#[ORM\Table(name: 'supplier_meta')]
 class SupplierMeta
 {
     #[ORM\Id]
@@ -14,8 +15,9 @@ class SupplierMeta
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $supplier_id = null;
+    #[ORM\ManyToOne(targetEntity: Supplier::class, cascade: ['persist', 'remove'], inversedBy: 'supplierMetas')]
+    #[ORM\JoinColumn(name: 'supplier_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Supplier $supplier = null;
 
     #[ORM\Column(length: 255)]
     private ?string $meta_key = null;
@@ -26,18 +28,6 @@ class SupplierMeta
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getSupplierId(): ?string
-    {
-        return $this->supplier_id;
-    }
-
-    public function setSupplierId(string $supplier_id): static
-    {
-        $this->supplier_id = $supplier_id;
-
-        return $this;
     }
 
     public function getMetaKey(): ?string
@@ -60,6 +50,18 @@ class SupplierMeta
     public function setMetaValue(array $meta_value): static
     {
         $this->meta_value = $meta_value;
+
+        return $this;
+    }
+
+    public function getSupplier(): ?Supplier
+    {
+        return $this->supplier;
+    }
+
+    public function setSupplier(?Supplier $supplier): static
+    {
+        $this->supplier = $supplier;
 
         return $this;
     }
