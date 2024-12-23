@@ -19,9 +19,6 @@ class UserProfile
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private ?User $user = null;
 
-    #[ORM\Column(type: Types::BIGINT)]
-    private ?string $user_id = null;
-
     //	gender: 0 = 'Male', 1 = 'Female', 2 = 'Other'
     #[ORM\Column]
     private ?int $gender = null;
@@ -49,18 +46,6 @@ class UserProfile
     public function setId(int $id): static
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    public function getUserId(): ?string
-    {
-        return $this->user_id;
-    }
-
-    public function setUserId(string $user_id): static
-    {
-        $this->user_id = $user_id;
 
         return $this;
     }
