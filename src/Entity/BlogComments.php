@@ -30,9 +30,9 @@ class BlogComments
     #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id')]
     private ?BlogPosts $post = null;
 
-    #[ORM\ManyToOne(targetEntity: Users::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true)]
-    private ?Users $user = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: BlogComments::class)]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true)]
@@ -70,12 +70,12 @@ class BlogComments
         return $this;
     }
 
-    public function getUser(): ?Users
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(?Users $user): static
+    public function setUser(?User $user): static
     {
         $this->user = $user;
 

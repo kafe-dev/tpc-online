@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PostRevisionsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity(repositoryClass: PostRevisionsRepository::class)]
 class PostRevisions

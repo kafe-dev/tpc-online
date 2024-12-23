@@ -16,9 +16,9 @@ class BlogNotifications
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Users::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
-    private ?Users $user = null;
+    private ?User $user = null;
 
     #[ORM\Column(type: Types::STRING, length: 50)]
     private ?string $type = null;
@@ -46,12 +46,12 @@ class BlogNotifications
         return $this->id;
     }
 
-    public function getUser(): ?Users
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function setUser(Users $user): static
+    public function setUser(User $user): static
     {
         $this->user = $user;
         return $this;
