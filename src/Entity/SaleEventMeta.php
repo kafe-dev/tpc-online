@@ -2,22 +2,22 @@
 
 namespace App\Entity;
 
-use App\Repository\SupplierMetaRepository;
+use App\Repository\SaleEventMetaRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: SupplierMetaRepository::class)]
-#[ORM\Table(name: 'supplier_meta')]
-class SupplierMeta
+#[ORM\Entity(repositoryClass: SaleEventMetaRepository::class)]
+#[ORM\Table(name: 'sale_events_meta')]
+class SaleEventMeta
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Supplier::class, cascade: ['persist', 'remove'], inversedBy: 'supplierMetas')]
-    #[ORM\JoinColumn(name: 'supplier_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private ?Supplier $supplier = null;
+    #[ORM\ManyToOne(targetEntity: SaleEvent::class, cascade: ['persist', 'remove'], inversedBy: 'saleEventsMetas')]
+    #[ORM\JoinColumn(name: 'sale_event_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?SaleEvent $sale_event = null;
 
     #[ORM\Column(length: 255)]
     private ?string $meta_key = null;
@@ -54,14 +54,14 @@ class SupplierMeta
         return $this;
     }
 
-    public function getSupplier(): ?Supplier
+    public function getSaleEvent(): ?SaleEvent
     {
-        return $this->supplier;
+        return $this->sale_event;
     }
 
-    public function setSupplier(?Supplier $supplier): static
+    public function setSaleEvent(?SaleEvent $sale_event): static
     {
-        $this->supplier = $supplier;
+        $this->sale_event = $sale_event;
 
         return $this;
     }

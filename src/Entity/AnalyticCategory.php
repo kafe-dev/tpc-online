@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AnalyticCategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AnalyticCategoryRepository::class)]
@@ -19,6 +21,17 @@ class AnalyticCategory
 
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $description = null;
+
+    /**
+     * @var Collection<int, Analytic>
+     */
+    #[ORM\OneToMany(targetEntity: Analytic::class, mappedBy: 'analytic_category', orphanRemoval: true)]
+    private Collection $analytics;
+
+    public function __construct()
+    {
+        $this->analytics = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -52,6 +65,36 @@ class AnalyticCategory
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Analytic>
+     */
+    public function getAnalytics(): Collection
+    {
+        return $this->analytics;
+    }
+
+    public function addAnalytic(Analytic $analytic): static
+    {
+        if (!$this->analytics->contains($analytic)) {
+            $this->analytics->add($analytic);
+            $analytic->setAnalyticCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnalytic(Analytic $analytic): static
+    {
+        if ($this->analytics->removeElement($analytic)) {
+            // set the owning side to null (unless already changed)
+            if ($analytic->getAnalyticCategory() === $this) {
+                $analytic->setAnalyticCategory(null);
+            }
+        }
 
         return $this;
     }

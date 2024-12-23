@@ -2,24 +2,24 @@
 
 namespace App\Entity;
 
-use App\Repository\WishlistRepository;
+use App\Repository\ProductCategoryRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: WishlistRepository::class)]
-#[ORM\Table(name: 'wishlist')]
-class Wishlist
+#[ORM\Entity(repositoryClass: ProductCategoryRepository::class)]
+#[ORM\Table(name: 'products_categories')]
+class ProductCategory
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'], inversedBy: 'wishlists')]
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private ?User $user = null;
+    #[ORM\ManyToOne(targetEntity: Category::class, cascade: ['persist', 'remove'], inversedBy: 'productsCategories')]
+    #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?Category $category = null;
 
-    #[ORM\ManyToOne(targetEntity: Product::class, cascade: ['persist', 'remove'], inversedBy: 'wishlists')]
+    #[ORM\ManyToOne(targetEntity: Product::class, cascade: ['persist', 'remove'], inversedBy: 'productsCategories')]
     #[ORM\JoinColumn(name: 'product_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private ?Product $product = null;
 
@@ -35,14 +35,14 @@ class Wishlist
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getCategory(): ?Category
     {
-        return $this->user;
+        return $this->category;
     }
 
-    public function setUser(?User $user): static
+    public function setCategory(?Category $category): static
     {
-        $this->user = $user;
+        $this->category = $category;
 
         return $this;
     }

@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserAgentRepository::class)]
 #[ORM\Table(name: 'user_agents')]
+#[ORM\HasLifecycleCallbacks]
 class UserAgent
 {
     #[ORM\Id]
@@ -19,16 +20,21 @@ class UserAgent
     #[ORM\Column]
     private array $data = [];
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $created_at = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
-    public function __construct()
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function lifecycle(): void
     {
-        $this->created_at = is_null($this->created_at) ? new DateTime() : $this->created_at;
-        $this->updated_at = new DateTime();
+        $this->setUpdatedAt(new \DateTime());
+
+        if (is_null($this->getCreatedAt())) {
+            $this->setCreatedAt(new \DateTimeImmutable());
+        }
     }
 
     public function getId(): ?int
@@ -48,12 +54,12 @@ class UserAgent
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): static
+    public function setCreatedAt(\DateTimeImmutable $created_at): static
     {
         $this->created_at = $created_at;
 
