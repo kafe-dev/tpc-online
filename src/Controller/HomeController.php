@@ -16,7 +16,6 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route(name: 'app_home_')]
 class HomeController extends AbstractController
 {
-
     /**
      * Action index.
      *

@@ -26,9 +26,9 @@ class BlogPosts
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Users::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id')]
-    private ?Users $author = null;
+    private ?User $author = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $title;
@@ -78,12 +78,12 @@ class BlogPosts
         return $this->id;
     }
 
-    public function getAuthor(): ?Users
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    public function setAuthor(?Users $author): static
+    public function setAuthor(?User $author): static
     {
         $this->author = $author;
 

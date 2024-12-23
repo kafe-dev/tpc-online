@@ -17,9 +17,9 @@ class RolePermission
     #[ORM\JoinColumn(name: 'role_id', referencedColumnName: 'id')]
     private ?Role $role = null;
 
-    #[ORM\ManyToOne(targetEntity: Permission::class)]
+    #[ORM\ManyToOne(targetEntity: Permissions::class)]
     #[ORM\JoinColumn(name: 'permission_id', referencedColumnName: 'id')]
-    private ?Permission $permission = null;
+    private ?Permissions $permission = null;
 
     public function getId(): ?int
     {
@@ -38,12 +38,12 @@ class RolePermission
         return $this;
     }
 
-    public function getPermission(): ?Permission
+    public function getPermission(): ?Permissions
     {
         return $this->permission;
     }
 
-    public function setPermission(?Permission $permission): static
+    public function setPermission(?Permissions $permission): static
     {
         $this->permission = $permission;
 
