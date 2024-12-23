@@ -22,9 +22,9 @@ class Inventory
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(targetEntity: Communes::class, cascade: ['persist', 'remove'], inversedBy: 'inventories')]
+    #[ORM\ManyToOne(targetEntity: Commune::class, cascade: ['persist', 'remove'], inversedBy: 'inventories')]
     #[ORM\JoinColumn(name: 'commune_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private ?Communes $commune = null;
+    private ?Commune $commune = null;
 
     #[ORM\Column(length: 500)]
     private ?string $address = null;
@@ -178,12 +178,12 @@ class Inventory
         return $this;
     }
 
-    public function getCommune(): ?Communes
+    public function getCommune(): ?Commune
     {
         return $this->commune;
     }
 
-    public function setCommune(?Communes $commune): static
+    public function setCommune(?Commune $commune): static
     {
         $this->commune = $commune;
 

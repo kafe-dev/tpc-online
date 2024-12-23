@@ -15,13 +15,13 @@ class ProductVariantSaleEvent
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: ProductVariants::class, cascade: ['persist', 'remove'], inversedBy: 'productVariantSaleEvents')]
+    #[ORM\ManyToOne(targetEntity: ProductVariant::class, cascade: ['persist', 'remove'], inversedBy: 'productVariantSaleEvents')]
     #[ORM\JoinColumn(name: 'product_variant_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private ?ProductVariants $product_variant = null;
+    private ?ProductVariant $product_variant = null;
 
-    #[ORM\ManyToOne(targetEntity: SaleEvents::class, cascade: ['persist', 'remove'], inversedBy: 'productVariantSaleEvents')]
+    #[ORM\ManyToOne(targetEntity: SaleEvent::class, cascade: ['persist', 'remove'], inversedBy: 'productVariantSaleEvents')]
     #[ORM\JoinColumn(name: 'sale_event_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private ?SaleEvents $sale_event = null;
+    private ?SaleEvent $sale_event = null;
 
     public function getId(): ?int
     {
@@ -35,24 +35,24 @@ class ProductVariantSaleEvent
         return $this;
     }
 
-    public function getProductVariant(): ?ProductVariants
+    public function getProductVariant(): ?ProductVariant
     {
         return $this->product_variant;
     }
 
-    public function setProductVariant(?ProductVariants $product_variant): static
+    public function setProductVariant(?ProductVariant $product_variant): static
     {
         $this->product_variant = $product_variant;
 
         return $this;
     }
 
-    public function getSaleEvent(): ?SaleEvents
+    public function getSaleEvent(): ?SaleEvent
     {
         return $this->sale_event;
     }
 
-    public function setSaleEvent(?SaleEvents $sale_event): static
+    public function setSaleEvent(?SaleEvent $sale_event): static
     {
         $this->sale_event = $sale_event;
 

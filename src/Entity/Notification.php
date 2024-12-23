@@ -17,13 +17,13 @@ class Notification
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Users::class, cascade: ['persist', 'remove'], inversedBy: 'senderNotis')]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'], inversedBy: 'senderNotis')]
     #[ORM\JoinColumn(name: 'sender_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private ?Users $sender = null;
+    private ?User $sender = null;
 
-    #[ORM\ManyToOne(targetEntity: Users::class, cascade: ['persist', 'remove'], inversedBy: 'receiverNotis')]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist', 'remove'], inversedBy: 'receiverNotis')]
     #[ORM\JoinColumn(name: 'receiver_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private ?Users $receiver = null;
+    private ?User $receiver = null;
 
     #[ORM\Column(length: 255)]
     private ?string $subject = null;
@@ -138,24 +138,24 @@ class Notification
         return $this;
     }
 
-    public function getSender(): ?Users
+    public function getSender(): ?User
     {
         return $this->sender;
     }
 
-    public function setSender(?Users $sender): static
+    public function setSender(?User $sender): static
     {
         $this->sender = $sender;
 
         return $this;
     }
 
-    public function getReceiver(): ?Users
+    public function getReceiver(): ?User
     {
         return $this->receiver;
     }
 
-    public function setReceiver(?Users $receiver): static
+    public function setReceiver(?User $receiver): static
     {
         $this->receiver = $receiver;
 

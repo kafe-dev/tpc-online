@@ -19,9 +19,9 @@ class ProductVariantInventory
     #[ORM\JoinColumn(name: 'inventory_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     private ?Inventory $inventory = null;
 
-    #[ORM\ManyToOne(targetEntity: ProductVariants::class, cascade: ['persist', 'remove'], inversedBy: 'productVariantInventories')]
+    #[ORM\ManyToOne(targetEntity: ProductVariant::class, cascade: ['persist', 'remove'], inversedBy: 'productVariantInventories')]
     #[ORM\JoinColumn(name: 'product_variant_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private ?ProductVariants $product_variant = null;
+    private ?ProductVariant $product_variant = null;
 
     #[ORM\Column]
     private ?int $stock = null;
@@ -62,12 +62,12 @@ class ProductVariantInventory
         return $this;
     }
 
-    public function getProductVariant(): ?ProductVariants
+    public function getProductVariant(): ?ProductVariant
     {
         return $this->product_variant;
     }
 
-    public function setProductVariant(?ProductVariants $product_variant): static
+    public function setProductVariant(?ProductVariant $product_variant): static
     {
         $this->product_variant = $product_variant;
 
