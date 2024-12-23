@@ -1,2 +1,2 @@
 # tpc-online
-The online market for 2nd laptops, pc and pc parts.
+The online store for laptops, pc and pc parts.
