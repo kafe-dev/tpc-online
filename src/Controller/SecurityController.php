@@ -31,12 +31,16 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('admin_dashboard_index');
         }
         $error = $authenticationUtils->getLastAuthenticationError();
-
+        $customErrorMessage = null;
+        if ($error) {
+            $customErrorMessage = 'Sai thông tin đăng nhập vui lòng thử lại!';
+        }
         $lastUsername = $authenticationUtils->getLastUsername();
-
+        $title = "Đăng nhập";
         return $this->render('security/login.html.twig', [
+            'title' => $title,
             'last_username' => $lastUsername,
-            'error' => $error,
+            'error' => $customErrorMessage,
         ]);
     }
 
