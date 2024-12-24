@@ -5,12 +5,7 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         app_user_provider:
-            entity:
-                class: App\Entity\User
-                property: email
-    role_hierarchy:
-        ROLE_ADMIN: ROLE_USER
-        ROLE_SUPER_ADMIN: [ ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
+            id: App\Security\CustomUserProvider
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -29,6 +24,10 @@ security:
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
+            user_checker: App\Security\UserChecker
+            login_throttling:
+                max_attempts: 5
+                interval: '5 minutes'
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
 
