@@ -27,13 +27,32 @@ class SecurityController extends AbstractController
     #[Route('/login', name: 'login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        if ($this->getUser()) {
-            return $this->redirectToRoute('admin_dashboard_index');
-        }
         $error = $authenticationUtils->getLastAuthenticationError();
         $customErrorMessage = null;
+
         if ($error) {
-            $customErrorMessage = 'Sai thông tin đăng nhập vui lòng thử lại!';
+            $errorMessage = $error->getMessage();
+           if($errorMessage == 'Email không tồn tại trong hệ thống!'){
+               $customErrorMessage = 'Email không tồn tại trong hệ thống!';
+           }else{
+               // Check the type of error
+               $customErrorMessage = match (get_class($error)) {
+                   'Symfony\Component\Security\Core\Exception\BadCredentialsException' => 'Tài khoản hoặc mật khẩu không đúng, vui lòng thử lại!',
+                   'Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException' => $error->getMessage(),
+                   'Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException' => 'Đăng nhập sai quá số lần cho phép!',
+                   default => 'Sai thông tin đăng nhập, vui lòng thử lại!',
+               };
+           }
+
+        }
+        if ($this->getUser()) {
+            if ($this->isGranted('ROLE_SUPER_ADMIN') || $this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_MANAGER')) {
+                return $this->redirectToRoute('admin_dashboard_index');
+            }
+
+            if ($this->isGranted('ROLE_USER')) {
+                return $this->redirectToRoute('app_home_index');
+            }
         }
         $lastUsername = $authenticationUtils->getLastUsername();
         $title = "Đăng nhập";
