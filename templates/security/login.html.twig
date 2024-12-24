@@ -1,21 +1,75 @@
 {% extends 'base.html.twig' %}
-
-{% block body %}
-    {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-
-    <form action="{{ path('app_security_login') }}" method="post">
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-        <label for="username">Email:</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" required>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="_password" required>
-
-        {# If you want to control the URL the user is redirected to on success
-        <input type="hidden" name="_target_path" value="/account"> #}
-
-        <button type="submit">login</button>
-    </form>
+{% block title %}{{ title }}  | {{ app_name }}{% endblock title %}
+{% block stylesheets %}
+    <link href="{{ asset('admin/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" id="bootstrap-stylesheet"/>
+    <link href="{{ asset('admin/css/icons.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('admin/css/app.min.css') }}" rel="stylesheet" type="text/css" id="app-stylesheet"/>
 {% endblock %}
+{% block body %}
+    <div class="account-pages my-5 pt-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center mb-4 mt-3">
+                                <a href="{{ path('app_home_index') }}">
+                                    <img src="{{ asset('admin/images/favicon.ico') }}" alt="" height="50">
+                                </a>
+                                {% if error %}
+                                    <div class="alert alert-danger text-danger alert-dismissible fade show" role="alert">
+                                        <strong>Lỗi!</strong> {{ error }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <form action="{{ path('app_security_login') }}" method="post" class="p-2">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                <div class="form-group">
+                                    <label for="email">Địa chỉ email</label>
+                                    <input class="form-control" type="email" id="email" name="_username"
+                                           placeholder="Email của bạn" required>
+                                </div>
+                                <div class="form-group">
+
+                                    <label for="password">Mật khẩu</label>
+                                    <input class="form-control" type="password" id="password" name="_password"
+                                           placeholder="******" required>
+                                </div>
+                                <div class="form-group mb-4 pb-3">
+                                    <div class="custom-control custom-checkbox checkbox-primary">
+                                        <input type="checkbox" name="_remember_me" class="custom-control-input"
+                                               id="remember_me">
+                                        <label class="custom-control-label" for="remember_me">Ghi nhớ đăng nhập</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3 text-center">
+                                    <button class="btn btn-primary btn-block" type="submit">Đăng nhập</button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- end card-body -->
+                    </div>
+                    <!-- end card -->
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container -->
+    </div>
+
+    {#    <form action="{{ path('app_security_login') }}" method="post"> #}
+    {#        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"> #}
+    {#        <label for="username">Email:</label> #}
+    {#        <input type="text" id="username" name="_username" value="{{ last_username }}" required> #}
+
+    {#        <label for="password">Password:</label> #}
+    {#        <input type="password" id="password" name="_password" required> #}
+
+    {#        <button type="submit">login</button> #}
+    {#    </form> #}
+{% endblock %}
+  {% block javascripts %}
+      <script src="{{ asset('admin/js/vendor.min.js') }}"></script>
+      <script src="{{ asset('admin/js/app.min.js') }}"></script>
+  {% endblock %}
